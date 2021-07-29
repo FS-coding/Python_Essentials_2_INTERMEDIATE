@@ -26,19 +26,15 @@ def led_display(number="missing"):
 
     val = ["1", "2", "3", "4", "5", "6", "7",
            "8", "9", "0", ".", ":", "/", "-"]
-    check = True
-    for ch in str(number):
-        if ch not in val:
-            check = False
-            if check == False:
-                print("Enter a valid number...")
-                led_display(input())
 
-    for i in range(5):
-        for di in (str(number)):
-            print(digits[di][i], end=' ')
-        print("\n", end='')
+    try:
+        for i in range(5):
+            for di in (number):
+                print(digits[di][i], end=' ')
+            print("\n", end='')
+    except:
+        print("Enter a valid number...")
+        led_display(input())
 
 
-led_display(112345)
-led_display()
+led_display("123")
