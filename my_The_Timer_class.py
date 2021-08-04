@@ -22,37 +22,37 @@
 
 class Timer:
     def __init__(self, hrs=0, min=0, secs=0):
-        self.hrs = hrs
-        self.min = min
-        self.secs = secs
+        self.__hrs = hrs
+        self.__min = min
+        self.__secs = secs
 
     def __str__(self):
-        time = time_format(self.hrs) + ":" + \
-            time_format(self.min) + ":" + time_format(self.secs)
+        time = time_format(self.__hrs) + ":" + \
+            time_format(self.__min) + ":" + time_format(self.__secs)
         return time
 
     def next_second(self):
-        self.secs += 1
-        if self.secs == 60:
-            self.secs = 0
-            self.min += 1
-        if self.min == 60:
-            self.min = 0
-            self.hrs += 1
-        if self.hrs == 24:
-            self.secs = self.min = self.hrs = 0
+        self.__secs += 1
+        if self.__secs == 60:
+            self.__secs = 0
+            self.__min += 1
+        if self.__min == 60:
+            self.__min = 0
+            self.__hrs += 1
+        if self.__hrs == 24:
+            self.__secs = self.__min = self.__hrs = 0
 
     def prev_second(self):
-        self.secs -= 1
-        if self.secs == -1:
-            self.secs = 59
-            self.min -= 1
-        if self.min == -1:
-            self.min = 59
-            self.hrs -= 1
-        if self.hrs == -1:
-            self.secs = self.min = 59
-            self.hrs = 23
+        self.__secs -= 1
+        if self.__secs == -1:
+            self.__secs = 59
+            self.__min -= 1
+        if self.__min == -1:
+            self.__min = 59
+            self.__hrs -= 1
+        if self.__hrs == -1:
+            self.__secs = self.__min = 59
+            self.__hrs = 23
 
 
 def time_format(num):
