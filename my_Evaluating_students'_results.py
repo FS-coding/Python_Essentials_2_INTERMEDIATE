@@ -19,7 +19,8 @@
 # prints a simple (but sorted) report Name Points:
 
 # program must be fully protected against all possible failures:
-# the file's non-existence, the file's emptiness,
+# the file's non-existence,
+# the file's emptiness,
 # or any input data failures;
 # encountering any data error should cause immediate program termination, and
 # the erroneous should be presented to the user;
@@ -28,25 +29,25 @@
 # Use a dictionary to store the students' data.
 
 from os import strerror
+import errno
 
 
 class StudentsDataException(Exception):
-    pass
+    def __init__(self):
+        Exception.__init__(self)
+        print("Error: ", strerror(e.errno))
+        exit(e.errno)
 
 
 class BadLine(StudentsDataException):
     pass
 
 
-class FileEmpty(StudentsDataException):
-    pass
+class FileEmpty(Exception):
+    def __init__(self, err):
+        Exception.__init__(self, err)
+        self.err = err
 
-
-# create dictionary
-# add/sum points
-
-# sort dict
-# print report
 
 dic = {}
 
@@ -73,14 +74,14 @@ def out_file(f_base, data):
     try:
         o = open(f_base + ".report.txt", 'wt')
         for d in data:
-            print(d)
+            # print(d)
             d = str(d).replace("'", "")
             d = str(d).replace("(", "")
             d = str(d).replace(")", "")
             print(d)
             o.write(str(d) + "\n")
         o.close()
-        print("File written")
+        print("** File written **")
 
     except IOError as e:
         print("I/O error occurred:", strerror(e.errno))
@@ -89,14 +90,18 @@ def out_file(f_base, data):
 try:
     #f_in = input("Enter file name: ")
     f_in = 'samplefile.txt'
-    f_base = get_base(f_in)
+    s = open(f_in, 'rt')
 
-    # read
-    s = open('samplefile.txt', 'rt')
+except IOError as e:
+    raise StudentsDataException
+
+try:
+    f_base = get_base(f_in)
     lines = s.readlines()
-    # while line != '':
+    if lines == []:
+        raise FileEmpty("File is empty!")
+
     for line in lines:
-        # print(line) # debug
         words = line.split()
         name = ""
         points = 0
@@ -106,13 +111,22 @@ try:
                 name = name.lstrip()
             else:
                 points += float(word)
+
         dic_add(dic, name, points)
     s.close()
 
     # output
     s_d = dic_sort(dic)
-    print(s_d)
+    # print(s_d)
     out_file(f_base, s_d)
 
+
+except FileEmpty as e:
+    print(e)
+
+except ValueError as e:
+    print("Bad line!")
+
 except IOError as e:
-    print("I/O error occurred:", strerror(e.errno))
+    print("Error: ", strerror(e.errno))
+    exit(e.errno)
